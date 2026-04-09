@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat Widget Demo</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4c1d95 100%);
+        min-height: 100vh;
+        color: #f8fafc;
+      }
+
+      .page {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 60px 24px 120px;
+      }
+
+      /* Hero */
+      .hero {
+        text-align: center;
+        margin-bottom: 64px;
+      }
+      .hero-badge {
+        display: inline-block;
+        background: rgba(99,102,241,0.3);
+        border: 1px solid rgba(99,102,241,0.5);
+        color: #c7d2fe;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 4px 14px;
+        border-radius: 100px;
+        margin-bottom: 20px;
+      }
+      .hero h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 800;
+        line-height: 1.15;
+        background: linear-gradient(135deg, #fff 30%, #c7d2fe);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 16px;
+      }
+      .hero p {
+        font-size: 1.1rem;
+        color: #a5b4fc;
+        max-width: 480px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      /* Cards */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+        margin-bottom: 48px;
+      }
+      .card {
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 16px;
+        padding: 24px;
+        backdrop-filter: blur(12px);
+      }
+      .card h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #e0e7ff;
+      }
+      .card p {
+        font-size: 14px;
+        color: #94a3b8;
+        line-height: 1.6;
+      }
+      .card-icon {
+        width: 36px;
+        height: 36px;
+        background: rgba(99,102,241,0.25);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        margin-bottom: 14px;
+      }
+
+      /* Code block */
+      .code-section {
+        background: rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 48px;
+      }
+      .code-section__header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.04);
+      }
+      .code-section__header span {
+        font-size: 13px;
+        font-weight: 600;
+        color: #94a3b8;
+      }
+      .dot { width: 12px; height: 12px; border-radius: 50%; }
+      .dot--red    { background: #ef4444; }
+      .dot--yellow { background: #eab308; }
+      .dot--green  { background: #22c55e; }
+      pre {
+        padding: 24px;
+        overflow-x: auto;
+        font-family: 'SF Mono', 'Fira Code', 'Fira Mono', Consolas, monospace;
+        font-size: 13px;
+        line-height: 1.7;
+        color: #e2e8f0;
+        tab-size: 2;
+      }
+      .kw  { color: #93c5fd; }
+      .str { color: #86efac; }
+      .cm  { color: #64748b; font-style: italic; }
+      .key { color: #f9a8d4; }
+      .num { color: #fcd34d; }
+
+      /* Theme switcher */
+      .theme-switcher {
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 48px;
+      }
+      .theme-switcher h2 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: #e0e7ff;
+      }
+      .theme-switcher p {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-bottom: 20px;
+      }
+      .theme-btns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .theme-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 100px;
+        border: 2px solid transparent;
+        background: rgba(255,255,255,0.08);
+        color: #e2e8f0;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: inherit;
+      }
+      .theme-btn:hover { background: rgba(255,255,255,0.15); }
+      .theme-btn.active { border-color: currentColor; background: rgba(255,255,255,0.15); }
+      .theme-btn .swatch {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      /* Filler content */
+      .content-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 48px;
+      }
+      @media (max-width: 600px) { .content-section { grid-template-columns: 1fr; } }
+      .content-card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 12px;
+        padding: 20px;
+      }
+      .content-card h4 { font-size: 14px; color: #c7d2fe; margin-bottom: 8px; }
+      .content-card p  { font-size: 13px; color: #64748b; line-height: 1.6; }
+
+      footer {
+        text-align: center;
+        font-size: 13px;
+        color: #475569;
+        padding-top: 24px;
+        border-top: 1px solid rgba(255,255,255,0.06);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+
+      <!-- Hero -->
+      <div class="hero">
+        <div class="hero-badge">Live Demo</div>
+        <h1>Embeddable Chat Widget</h1>
+        <p>A production-quality Intercom-style chat widget built with Preact + Vite. One script tag. No dependencies.</p>
+      </div>
+
+      <!-- Feature Cards -->
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h3>Single Script Embed</h3>
+          <p>Drop one &lt;script&gt; tag into any page. CSS is auto-injected. No configuration of stylesheets needed.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎨</div>
+          <h3>Fully Themeable</h3>
+          <p>CSS custom properties control every color, radius, and position. Switch themes instantly at runtime.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔗</div>
+          <h3>n8n Compatible</h3>
+          <p>Works out of the box with n8n webhook nodes. Also handles custom response formats automatically.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">💾</div>
+          <h3>Session Persistence</h3>
+          <p>Conversations persist across page reloads via localStorage. New conversation resets cleanly.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📱</div>
+          <h3>Mobile Ready</h3>
+          <p>Full-screen mode on small screens. Touch-friendly targets. Smooth spring animations throughout.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌙</div>
+          <h3>Dark Mode</h3>
+          <p>Follows system preference by default. Can be forced light or dark via the <code>darkMode</code> option.</p>
+        </div>
+      </div>
+
+      <!-- Theme Switcher -->
+      <div class="theme-switcher">
+        <h2>Try Different Themes</h2>
+        <p>Click a theme to re-initialize the widget with a new color. The bubble in the corner will update instantly.</p>
+        <div class="theme-btns">
+          <button class="theme-btn active" data-theme="indigo" style="color:#6366f1">
+            <span class="swatch" style="background:#6366f1"></span> Indigo (default)
+          </button>
+          <button class="theme-btn" data-theme="emerald" style="color:#10b981">
+            <span class="swatch" style="background:#10b981"></span> Emerald
+          </button>
+          <button class="theme-btn" data-theme="rose" style="color:#f43f5e">
+            <span class="swatch" style="background:#f43f5e"></span> Rose
+          </button>
+          <button class="theme-btn" data-theme="amber" style="color:#f59e0b">
+            <span class="swatch" style="background:#f59e0b"></span> Amber
+          </button>
+          <button class="theme-btn" data-theme="sky" style="color:#0ea5e9">
+            <span class="swatch" style="background:#0ea5e9"></span> Sky
+          </button>
+          <button class="theme-btn" data-theme="slate" style="color:#64748b">
+            <span class="swatch" style="background:#64748b"></span> Slate Dark
+          </button>
+        </div>
+      </div>
+
+      <!-- Embed Code -->
+      <div class="code-section">
+        <div class="code-section__header">
+          <div class="dot dot--red"></div>
+          <div class="dot dot--yellow"></div>
+          <div class="dot dot--green"></div>
+          <span>Embed snippet</span>
+        </div>
+        <pre><span class="cm">&lt;!-- 1. Load the widget script (just one tag!) --&gt;</span>
+<span class="kw">&lt;script</span> <span class="key">src</span>=<span class="str">"https://cdn.example.com/chat-widget.umd.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+
+<span class="cm">&lt;!-- 2. Initialize with your config --&gt;</span>
+<span class="kw">&lt;script&gt;</span>
+  ChatWidget.create({
+    <span class="key">webhookUrl</span>: <span class="str">'https://your-n8n.app/webhook/xxxx'</span>,
+    <span class="key">title</span>: <span class="str">'Support'</span>,
+    <span class="key">subtitle</span>: <span class="str">"We're here 24/7"</span>,
+    <span class="key">botName</span>: <span class="str">'Assistant'</span>,
+    <span class="key">initialMessages</span>: [<span class="str">'Hello! 👋'</span>, <span class="str">'How can I help?'</span>],
+    <span class="key">persistSession</span>: <span class="kw">true</span>,
+    <span class="key">theme</span>: {
+      <span class="key">primaryColor</span>: <span class="str">'#6366f1'</span>,
+      <span class="key">position</span>: <span class="str">'bottom-right'</span>,
+      <span class="key">darkMode</span>: <span class="str">'auto'</span>,
+    },
+  });
+<span class="kw">&lt;/script&gt;</span></pre>
+      </div>
+
+      <!-- Filler content -->
+      <div class="content-section">
+        <div class="content-card">
+          <h4>Response Formats</h4>
+          <p>The widget normalises <code>{ output }</code>, <code>{ text }</code>, <code>{ message }</code>, <code>{ response }</code>, <code>{ reply }</code>, arrays, and plain strings automatically.</p>
+        </div>
+        <div class="content-card">
+          <h4>Public API</h4>
+          <p><code>ChatWidget.create(config)</code> mounts the widget. <code>ChatWidget.destroy()</code> removes it cleanly. Safe to call multiple times.</p>
+        </div>
+        <div class="content-card">
+          <h4>Callbacks</h4>
+          <p>Hook into <code>onOpen</code>, <code>onClose</code>, <code>onMessage</code>, and <code>onError</code> for analytics, custom logic, or integrations.</p>
+        </div>
+        <div class="content-card">
+          <h4>Custom CSS</h4>
+          <p>Pass a <code>customCSS</code> string to inject additional styles scoped inside the widget's shadow-like <code>.cw-root</code> container.</p>
+        </div>
+      </div>
+
+      <footer>
+        Built with Preact + Vite &mdash; Chat Widget Demo
+      </footer>
+
+    </div>
+
+    <!-- ============================================================
+         Load the built widget (run `npm run build` first)
+         ============================================================ -->
+    <script src="../dist/chat-widget.umd.js"></script>
+
+    <script>
+      // ---- Theme configurations ----
+      const THEMES = {
+        indigo: {
+          primaryColor: '#6366f1',
+          primaryTextColor: '#ffffff',
+          position: 'bottom-right',
+        },
+        emerald: {
+          primaryColor: '#10b981',
+          primaryTextColor: '#ffffff',
+          position: 'bottom-right',
+        },
+        rose: {
+          primaryColor: '#f43f5e',
+          primaryTextColor: '#ffffff',
+          position: 'bottom-right',
+        },
+        amber: {
+          primaryColor: '#f59e0b',
+          primaryTextColor: '#111827',
+          position: 'bottom-right',
+        },
+        sky: {
+          primaryColor: '#0ea5e9',
+          primaryTextColor: '#ffffff',
+          position: 'bottom-right',
+        },
+        slate: {
+          primaryColor: '#64748b',
+          primaryTextColor: '#ffffff',
+          backgroundColor: '#1e293b',
+          textColor: '#f1f5f9',
+          position: 'bottom-right',
+          darkMode: true,
+        },
+      };
+
+      // ---- Mock webhook so demo works without a real backend ----
+      const _origFetch = window.fetch;
+      window.fetch = async function(url, opts) {
+        if (url && url.toString().includes('demo.local')) {
+          await new Promise(r => setTimeout(r, 700 + Math.random() * 600));
+          let body = {};
+          try { body = JSON.parse(opts && opts.body); } catch {}
+          const replies = [
+            "Thanks for reaching out! I'm here to help. 😊",
+            "That's a great question! Let me look into that for you right away.",
+            "I understand your concern. Could you share a bit more detail?",
+            "Absolutely! I can help you with that.",
+            "Got it. Give me just a moment to pull that information up.",
+            "Thanks for your patience! Here's what I found...",
+          ];
+          const output = replies[Math.floor(Math.random() * replies.length)];
+          return new Response(JSON.stringify({ output }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+        return _origFetch.apply(this, arguments);
+      };
+
+      // ---- Initialize widget ----
+      function initWidget(themeKey) {
+        const theme = THEMES[themeKey] || THEMES.indigo;
+
+        ChatWidget.create({
+          // Replace with your real n8n (or other) webhook URL:
+          webhookUrl: 'https://demo.local/webhook/chat',
+
+          title: 'Support',
+          subtitle: "We're here 24/7",
+          botName: 'Assistant',
+          botAvatar: null,
+          initialMessages: [
+            'Hello! 👋 Welcome to the Chat Widget demo.',
+            'This is a live preview — try sending a message!',
+          ],
+          placeholder: 'Type a message...',
+          autoOpen: false,
+          persistSession: false,   // disabled so demo always starts fresh
+          showTimestamps: true,
+          typingDelay: 900,
+          webhookHeaders: {},
+          requestPayload: {},
+          theme: {
+            ...theme,
+            borderRadius: '16px',
+            bubbleSize: '56px',
+            offsetX: '20px',
+            offsetY: '20px',
+            darkMode: theme.darkMode || 'auto',
+          },
+          i18n: {
+            title: 'Chat',
+            subtitle: '',
+            placeholder: 'Type a message...',
+            newConversation: 'New Conversation',
+          },
+          customCSS: '',
+          onOpen:    () => console.log('[Demo] Widget opened'),
+          onClose:   () => console.log('[Demo] Widget closed'),
+          onMessage: (msg) => console.log('[Demo] Message:', msg),
+          onError:   (err) => console.error('[Demo] Error:', err),
+        });
+      }
+
+      // ---- Theme switcher buttons ----
+      document.querySelectorAll('.theme-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          initWidget(btn.dataset.theme);
+        });
+      });
+
+      // Start with default theme
+      initWidget('indigo');
+    </script>
+  </body>
+</html>
