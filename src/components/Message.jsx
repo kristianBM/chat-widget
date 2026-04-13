@@ -1,10 +1,6 @@
 import { h } from 'preact';
+import { parseLinks, formatUrlLabel } from '../utils/parseLinks.js';
 
-/**
- * Format a Date object to a short readable time string (e.g. "2:34 PM").
- * @param {Date} date
- * @returns {string}
- */
 function formatTime(date) {
   if (!date) return '';
   try {
@@ -17,18 +13,55 @@ function formatTime(date) {
   }
 }
 
+/** External link icon */
+function ExternalLinkIcon() {
+  return (
+    <svg
+      class="cw-link__icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/**
+ * Renders message content, turning any URLs into styled clickable links.
+ */
+function MessageContent({ content }) {
+  const parts = parseLinks(content);
+
+  return parts.map((part, i) => {
+    if (part.type === 'url') {
+      return (
+        <a
+          key={i}
+          href={part.value}
+          class="cw-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          title={part.value}
+        >
+          {formatUrlLabel(part.value)}
+          <ExternalLinkIcon />
+        </a>
+      );
+    }
+    return part.value;
+  });
+}
+
 /**
  * A single message bubble with optional avatar and timestamp.
- *
- * @param {object} props
- * @param {'bot'|'user'} props.role
- * @param {string}  props.content
- * @param {boolean} props.isError
- * @param {Date|null} props.timestamp
- * @param {boolean} props.showTimestamps
- * @param {boolean} props.hideAvatar     - Hide avatar for consecutive same-sender messages
- * @param {string}  props.botName
- * @param {string|null} props.botAvatar
  */
 export default function Message({ role, content, isError, timestamp, showTimestamps, hideAvatar, botName, botAvatar }) {
   const isBot = role === 'bot';
@@ -55,7 +88,7 @@ export default function Message({ role, content, isError, timestamp, showTimesta
 
       <div class="cw-message__body">
         <div class="cw-message__bubble">
-          {content}
+          <MessageContent content={content} />
         </div>
         {showTimestamps && timestamp && (
           <time class="cw-message__time" dateTime={new Date(timestamp).toISOString()}>
