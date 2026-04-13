@@ -19,8 +19,8 @@ export function parseLinks(text) {
       parts.push({ type: 'text', value: text.slice(lastIndex, match.index) });
     }
 
-    // Strip trailing punctuation that is likely not part of the URL
-    const url = match[0].replace(/[.,;:!?)\]'"]+$/, '');
+    // Strip trailing punctuation and markdown syntax that is likely not part of the URL
+    const url = match[0].replace(/[.,;:!?)\]'"*_`]+$/, '');
     const trailingChars = match[0].slice(url.length);
 
     parts.push({ type: 'url', value: url });
@@ -49,14 +49,11 @@ export function parseLinks(text) {
  * @param {number} [maxLength=48]
  * @returns {string}
  */
-export function formatUrlLabel(url, maxLength = 48) {
+export function formatUrlLabel(url) {
   try {
-    const { hostname, pathname, search } = new URL(url);
-    const host = hostname.replace(/^www\./, '');
-    const path = pathname === '/' ? '' : pathname + search;
-    const full = host + path;
-    return full.length > maxLength ? full.slice(0, maxLength - 1) + '…' : full;
+    const { hostname } = new URL(url);
+    return hostname.replace(/^www\./, '');
   } catch {
-    return url.length > maxLength ? url.slice(0, maxLength - 1) + '…' : url;
+    return url;
   }
 }

@@ -1,5 +1,5 @@
 var ie, b, qe, H, ze, Je, Ke, ue, X, Y, Ve, xe, he, ge, re = {}, oe = [], ut = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i, ae = Array.isArray;
-function L(e, t) {
+function D(e, t) {
   for (var r in t) e[r] = t[r];
   return e;
 }
@@ -29,7 +29,7 @@ function W(e, t) {
 }
 function wt(e) {
   if (e.__P && e.__d) {
-    var t = e.__v, r = t.__e, n = [], i = [], o = L({}, t);
+    var t = e.__v, r = t.__e, n = [], i = [], o = D({}, t);
     o.__v = t.__v + 1, b.vnode && b.vnode(o), ke(e.__P, o, t, e.__n, e.__P.namespaceURI, 32 & t.__u ? [r] : null, n, r ?? W(t), !!(32 & t.__u), i), o.__v = t.__v, o.__.__k[o.__i] = o, et(n, o, i), t.__e = t.__ = null, o.__e != r && Xe(o);
   }
 }
@@ -115,7 +115,7 @@ function ke(e, t, r, n, i, o, s, l, _, c) {
   if (t.constructor !== void 0) return null;
   128 & r.__u && (_ = !!(32 & r.__u), o = [l = t.__e = r.__e]), (u = b.__b) && u(t);
   e: if (typeof C == "function") try {
-    if (g = t.props, h = C.prototype && C.prototype.render, k = (u = C.contextType) && n[u.__c], M = u ? k ? k.props.value : u.__ : n, r.__c ? m = (a = t.__c = r.__c).__ = a.__E : (h ? t.__c = a = new C(g, M) : (t.__c = a = new Z(g, M), a.constructor = C, a.render = mt), k && k.sub(a), a.state || (a.state = {}), a.__n = n, w = a.__d = !0, a.__h = [], a._sb = []), h && a.__s == null && (a.__s = a.state), h && C.getDerivedStateFromProps != null && (a.__s == a.state && (a.__s = L({}, a.__s)), L(a.__s, C.getDerivedStateFromProps(g, a.__s))), f = a.props, d = a.state, a.__v = t, w) h && C.getDerivedStateFromProps == null && a.componentWillMount != null && a.componentWillMount(), h && a.componentDidMount != null && a.__h.push(a.componentDidMount);
+    if (g = t.props, h = C.prototype && C.prototype.render, k = (u = C.contextType) && n[u.__c], M = u ? k ? k.props.value : u.__ : n, r.__c ? m = (a = t.__c = r.__c).__ = a.__E : (h ? t.__c = a = new C(g, M) : (t.__c = a = new Z(g, M), a.constructor = C, a.render = mt), k && k.sub(a), a.state || (a.state = {}), a.__n = n, w = a.__d = !0, a.__h = [], a._sb = []), h && a.__s == null && (a.__s = a.state), h && C.getDerivedStateFromProps != null && (a.__s == a.state && (a.__s = D({}, a.__s)), D(a.__s, C.getDerivedStateFromProps(g, a.__s))), f = a.props, d = a.state, a.__v = t, w) h && C.getDerivedStateFromProps == null && a.componentWillMount != null && a.componentWillMount(), h && a.componentDidMount != null && a.__h.push(a.componentDidMount);
     else {
       if (h && C.getDerivedStateFromProps == null && g !== f && a.componentWillReceiveProps != null && a.componentWillReceiveProps(g, M), t.__v == r.__v || !a.__e && a.shouldComponentUpdate != null && a.shouldComponentUpdate(g, a.__s, M) === !1) {
         t.__v != r.__v && (a.props = g, a.state = a.__s, a.__d = !1), t.__e = r.__e, t.__k = r.__k, t.__k.some(function(I) {
@@ -131,7 +131,7 @@ function ke(e, t, r, n, i, o, s, l, _, c) {
     else do
       a.__d = !1, z && z(t), u = a.render(a.props, a.state, a.context), a.state = a.__s;
     while (a.__d && ++T < 25);
-    a.state = a.__s, a.getChildContext != null && (n = L(L({}, n), a.getChildContext())), h && !w && a.getSnapshotBeforeUpdate != null && (v = a.getSnapshotBeforeUpdate(f, d)), $ = u != null && u.type === se && u.key == null ? tt(u.props.children) : u, l = Qe(e, ae($) ? $ : [$], t, r, n, i, o, s, l, _, c), a.base = t.__e, t.__u &= -161, a.__h.length && s.push(a), m && (a.__E = a.__ = null);
+    a.state = a.__s, a.getChildContext != null && (n = D(D({}, n), a.getChildContext())), h && !w && a.getSnapshotBeforeUpdate != null && (v = a.getSnapshotBeforeUpdate(f, d)), $ = u != null && u.type === se && u.key == null ? tt(u.props.children) : u, l = Qe(e, ae($) ? $ : [$], t, r, n, i, o, s, l, _, c), a.base = t.__e, t.__u &= -161, a.__h.length && s.push(a), m && (a.__E = a.__ = null);
   } catch (I) {
     if (t.__v = null, _ || o != null) if (I.then) {
       for (t.__u |= _ ? 160 : 128; l && l.nodeType == 8 && l.nextSibling; ) l = l.nextSibling;
@@ -162,7 +162,7 @@ function et(e, t, r) {
   });
 }
 function tt(e) {
-  return typeof e != "object" || e == null || e.__b > 0 ? e : ae(e) ? e.map(tt) : L({}, e);
+  return typeof e != "object" || e == null || e.__b > 0 ? e : ae(e) ? e.map(tt) : D({}, e);
 }
 function bt(e, t, r, n, i, o, s, l, _) {
   var c, u, a, w, f, d, v, m = r.props || re, g = t.props, h = t.type;
@@ -226,7 +226,7 @@ ie = oe.slice, b = { __e: function(e, t, r, n) {
   throw e;
 } }, qe = 0, Z.prototype.setState = function(e, t) {
   var r;
-  r = this.__s != null && this.__s != this.state ? this.__s : this.__s = L({}, this.state), typeof e == "function" && (e = e(L({}, r), this.props)), e && L(r, e), e != null && this.__v && (t && this._sb.push(t), je(this));
+  r = this.__s != null && this.__s != this.state ? this.__s : this.__s = D({}, this.state), typeof e == "function" && (e = e(D({}, r), this.props)), e && D(r, e), e != null && this.__v && (t && this._sb.push(t), je(this));
 }, Z.prototype.forceUpdate = function(e) {
   this.__v && (this.__e = !0, e && this.__h.push(e), je(this));
 }, Z.prototype.render = se, H = [], Je = typeof Promise == "function" ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, Ke = function(e, t) {
@@ -297,7 +297,7 @@ function it(e, t) {
   var r = Se(q++, 7);
   return at(r.__H, t) && (r.__ = e(), r.__H = t, r.__h = e), r.__;
 }
-function D(e, t) {
+function L(e, t) {
   return J = 8, it(function() {
     return e;
   }, t);
@@ -483,23 +483,23 @@ function It({ title: e, subtitle: t, botName: r, botAvatar: n, i18n: i, onClose:
     ] })
   ] }) });
 }
-function Dt(e) {
+function Lt(e) {
   if (!e) return [];
   const t = /(https?:\/\/[^\s<>"{}|\\^`[\]]+)/gi, r = [];
   let n = 0, i;
   for (; (i = t.exec(e)) !== null; ) {
     i.index > n && r.push({ type: "text", value: e.slice(n, i.index) });
-    const o = i[0].replace(/[.,;:!?)\]'"]+$/, ""), s = i[0].slice(o.length);
+    const o = i[0].replace(/[.,;:!?)\]'"*_`]+$/, ""), s = i[0].slice(o.length);
     r.push({ type: "url", value: o }), s && r.push({ type: "text", value: s }), n = i.index + i[0].length;
   }
   return n < e.length && r.push({ type: "text", value: e.slice(n) }), r;
 }
-function Lt(e, t = 48) {
+function Dt(e) {
   try {
-    const { hostname: r, pathname: n, search: i } = new URL(e), o = r.replace(/^www\./, ""), s = n === "/" ? "" : n + i, l = o + s;
-    return l.length > t ? l.slice(0, t - 1) + "…" : l;
+    const { hostname: t } = new URL(e);
+    return t.replace(/^www\./, "");
   } catch {
-    return e.length > t ? e.slice(0, t - 1) + "…" : e;
+    return e;
   }
 }
 function zt(e) {
@@ -536,7 +536,7 @@ function jt() {
   );
 }
 function Ht({ content: e }) {
-  return Dt(e).map((r, n) => r.type === "url" ? /* @__PURE__ */ p(
+  return Lt(e).map((r, n) => r.type === "url" ? /* @__PURE__ */ p(
     "a",
     {
       href: r.value,
@@ -545,7 +545,7 @@ function Ht({ content: e }) {
       rel: "noopener noreferrer",
       title: r.value,
       children: [
-        Lt(r.value),
+        Dt(r.value),
         /* @__PURE__ */ p(jt, {})
       ]
     },
@@ -623,17 +623,17 @@ function Ut() {
   ) });
 }
 function At({ onSend: e, disabled: t, placeholder: r }) {
-  const n = K(null), i = D(() => {
+  const n = K(null), i = L(() => {
     const _ = n.current;
     _ && (_.value = "", _.style.height = "auto");
-  }, []), o = D(() => {
+  }, []), o = L(() => {
     var u;
     const _ = n.current, c = (u = _ == null ? void 0 : _.value) == null ? void 0 : u.trim();
     !c || t || (e(c), i());
-  }, [t, e, i]), s = D((_) => {
+  }, [t, e, i]), s = L((_) => {
     const c = _.target;
     c.style.height = "auto", c.style.height = Math.min(c.scrollHeight, 100) + "px";
-  }, []), l = D((_) => {
+  }, []), l = L((_) => {
     _.key === "Enter" && !_.shiftKey && (_.preventDefault(), o());
   }, [o]);
   return /* @__PURE__ */ p("div", { class: "cw-input-area", children: /* @__PURE__ */ p("div", { class: "cw-input-wrapper", children: [
@@ -854,13 +854,13 @@ function Jt(e) {
       j > 0 && le((U) => U + j);
     }
   }, [T]);
-  const Ie = D(() => {
+  const Ie = L(() => {
     z(!0), le(0), typeof m == "function" && m();
-  }, [m]), de = D(() => {
+  }, [m]), de = L(() => {
     z(!1), typeof g == "function" && g();
-  }, [g]), _t = D(() => {
+  }, [g]), _t = L(() => {
     _e.current ? de() : Ie();
-  }, [Ie, de]), dt = D(async (S) => {
+  }, [Ie, de]), dt = L(async (S) => {
     if (!S.trim() || I) return;
     const j = {
       id: te(),
@@ -902,14 +902,14 @@ function Jt(e) {
     } finally {
       C(!1), ce(!1);
     }
-  }, [t, V, w, f, a, I, h, k]), pt = D(() => {
+  }, [t, V, w, f, a, I, h, k]), pt = L(() => {
     const S = Oe();
     Te(S), Yt(), $(Ye(s)), le(0), C(!1), ce(!1);
-  }, [s]), De = (d == null ? void 0 : d.position) || "bottom-right", ft = `cw-root--${["bottom-right", "bottom-left", "top-right", "top-left"].includes(De) ? De : "bottom-right"}`, Le = d == null ? void 0 : d.darkMode;
+  }, [s]), Le = (d == null ? void 0 : d.position) || "bottom-right", ft = `cw-root--${["bottom-right", "bottom-left", "top-right", "top-left"].includes(Le) ? Le : "bottom-right"}`, De = d == null ? void 0 : d.darkMode;
   return /* @__PURE__ */ p(
     "div",
     {
-      class: ["cw-root", ft, Le === !0 ? "cw-root--dark" : Le === !1 ? "cw-root--light" : ""].filter(Boolean).join(" "),
+      class: ["cw-root", ft, De === !0 ? "cw-root--dark" : De === !1 ? "cw-root--light" : ""].filter(Boolean).join(" "),
       style: {
         ...(d == null ? void 0 : d.primaryColor) && { "--cw-primary": d.primaryColor },
         ...(d == null ? void 0 : d.primaryTextColor) && { "--cw-primary-text": d.primaryTextColor },
