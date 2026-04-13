@@ -1,4 +1,3 @@
-import { h } from 'preact';
 import { parseLinks, formatUrlLabel } from '../utils/parseLinks.js';
 
 function formatTime(date) {
@@ -50,8 +49,9 @@ function MessageContent({ content }) {
           target="_blank"
           rel="noopener noreferrer"
           title={part.value}
+          aria-label={`${part.label || formatUrlLabel(part.value)} (opens in new tab)`}
         >
-          {formatUrlLabel(part.value)}
+          {part.label || formatUrlLabel(part.value)}
           <ExternalLinkIcon />
         </a>
       );

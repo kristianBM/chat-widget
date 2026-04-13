@@ -1,39 +1,47 @@
 /**
  * Splits a text string into alternating plain-text and URL segments.
- * URLs are detected by the http(s):// scheme and cleaned of trailing punctuation.
+ * Handles both:
+ *  - Markdown links:  [label](https://example.com)  → uses label as display text
+ *  - Plain URLs:      https://example.com            → uses hostname as display text
  *
  * @param {string} text
- * @returns {Array<{ type: 'text'|'url', value: string }>}
+ * @returns {Array<{ type: 'text'|'url', value: string, label?: string }>}
  */
 export function parseLinks(text) {
   if (!text) return [];
 
-  const urlRegex = /(https?:\/\/[^\s<>"{}|\\^`[\]]+)/gi;
+  // Match markdown links first, then plain URLs
+  const combinedRegex = /\[([^\]]*)\]\((https?:\/\/[^)]+)\)|(https?:\/\/[^\s<>"{}|\\^`[\]]+)/gi;
+
   const parts = [];
   let lastIndex = 0;
   let match;
 
-  while ((match = urlRegex.exec(text)) !== null) {
-    // Text before the URL
+  while ((match = combinedRegex.exec(text)) !== null) {
+    // Text before this match
     if (match.index > lastIndex) {
       parts.push({ type: 'text', value: text.slice(lastIndex, match.index) });
     }
 
-    // Strip trailing punctuation and markdown syntax that is likely not part of the URL
-    const url = match[0].replace(/[.,;:!?)\]'"*_`]+$/, '');
-    const trailingChars = match[0].slice(url.length);
-
-    parts.push({ type: 'url', value: url });
-
-    // Put back any stripped trailing characters as plain text
-    if (trailingChars) {
-      parts.push({ type: 'text', value: trailingChars });
+    if (match[1] !== undefined) {
+      // Markdown link [label](url) — use the label as display text
+      const url = match[2].replace(/[.,;:!?)\]'"*_`]+$/, '');
+      const label = match[1].trim() || formatUrlLabel(url);
+      parts.push({ type: 'url', value: url, label });
+    } else {
+      // Plain URL — strip trailing punctuation / markdown syntax
+      const url = match[3].replace(/[.,;:!?)\]'"*_`]+$/, '');
+      const trailingChars = match[3].slice(url.length);
+      parts.push({ type: 'url', value: url });
+      if (trailingChars) {
+        parts.push({ type: 'text', value: trailingChars });
+      }
     }
 
     lastIndex = match.index + match[0].length;
   }
 
-  // Remaining text after the last URL
+  // Remaining text after last match
   if (lastIndex < text.length) {
     parts.push({ type: 'text', value: text.slice(lastIndex) });
   }
@@ -42,11 +50,10 @@ export function parseLinks(text) {
 }
 
 /**
- * Returns a shorter display label for a URL (domain + truncated path).
- * e.g. "https://www.example.com/some/very/long/path" → "example.com/some/very/lon…"
+ * Returns just the hostname from a URL, without the www. prefix.
+ * e.g. "https://www.example.com/path" → "example.com"
  *
  * @param {string} url
- * @param {number} [maxLength=48]
  * @returns {string}
  */
 export function formatUrlLabel(url) {
