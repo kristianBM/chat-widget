@@ -231,7 +231,7 @@ export default function ChatWidget(config) {
 
   return (
     <div
-      class={['cw-root', posClass, darkClass].filter(Boolean).join(' ')}
+      class={['cw-root', posClass, darkClass, isOpen ? 'cw-root--open' : ''].filter(Boolean).join(' ')}
       style={{
         ...(theme?.primaryColor     && { '--cw-primary':      theme.primaryColor }),
         ...(theme?.primaryTextColor && { '--cw-primary-text': theme.primaryTextColor }),
