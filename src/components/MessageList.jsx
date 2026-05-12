@@ -35,6 +35,7 @@ export default function MessageList({ messages, isTyping, showTimestamps, botNam
             key={msg.id}
             role={msg.role}
             content={msg.content}
+            attachments={msg.attachments}
             isError={msg.isError}
             timestamp={msg.timestamp}
             showTimestamps={showTimestamps}

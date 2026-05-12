@@ -15,13 +15,24 @@
  * @param {object} [opts.requestPayload={}] Extra body fields merged into the request
  * @returns {Promise<string>} The bot's reply as a plain string
  */
-export async function sendMessage({ webhookUrl, sessionId, message, headers = {}, requestPayload = {} }) {
-  const body = JSON.stringify({
+export async function sendMessage({ webhookUrl, sessionId, message, attachments = [], headers = {}, requestPayload = {} }) {
+  const payload = {
     action: 'sendMessage',
     sessionId,
     chatInput: message,
     ...requestPayload,
-  });
+  };
+
+  if (attachments.length > 0) {
+    payload.attachments = attachments.map((a) => ({
+      type: a.type,
+      mime: a.mime,
+      data: a.data,
+      name: a.name,
+    }));
+  }
+
+  const body = JSON.stringify(payload);
 
   const response = await fetch(webhookUrl, {
     method: 'POST',

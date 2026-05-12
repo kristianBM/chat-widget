@@ -131,13 +131,15 @@ export default function ChatWidget(config) {
     }
   }, [handleOpen, handleClose]);
 
-  const handleSend = useCallback(async (text) => {
-    if (!text.trim() || isDisabled) return;
+  const handleSend = useCallback(async (text, attachments = []) => {
+    const hasText = !!text && text.trim().length > 0;
+    if ((!hasText && attachments.length === 0) || isDisabled) return;
 
     const userMsg = {
       id: nextId(),
       role: 'user',
-      content: text,
+      content: text || '',
+      attachments,
       timestamp: new Date(),
       isError: false,
     };
@@ -147,7 +149,7 @@ export default function ChatWidget(config) {
     setIsDisabled(true);
 
     if (typeof onMessage === 'function') {
-      onMessage({ role: 'user', content: text });
+      onMessage({ role: 'user', content: text, attachments });
     }
 
     // Simulate minimum typing delay for UX
@@ -158,6 +160,7 @@ export default function ChatWidget(config) {
         webhookUrl,
         sessionId,
         message: text,
+        attachments,
         headers: webhookHeaders,
         requestPayload,
       });

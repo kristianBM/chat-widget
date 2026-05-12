@@ -375,37 +375,15 @@
         },
       };
 
-      // ---- Mock webhook so demo works without a real backend ----
-      const _origFetch = window.fetch;
-      window.fetch = async function(url, opts) {
-        if (url && url.toString().includes('demo.local')) {
-          await new Promise(r => setTimeout(r, 700 + Math.random() * 600));
-          let body = {};
-          try { body = JSON.parse(opts && opts.body); } catch {}
-          const replies = [
-            "Thanks for reaching out! I'm here to help. 😊",
-            "That's a great question! Let me look into that for you right away.",
-            "I understand your concern. Could you share a bit more detail?",
-            "Absolutely! I can help you with that.",
-            "Got it. Give me just a moment to pull that information up.",
-            "Thanks for your patience! Here's what I found...",
-          ];
-          const output = replies[Math.floor(Math.random() * replies.length)];
-          return new Response(JSON.stringify({ output }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' },
-          });
-        }
-        return _origFetch.apply(this, arguments);
-      };
+      // Mock fetch removed — testing against real n8n webhook
 
       // ---- Initialize widget ----
       function initWidget(themeKey) {
         const theme = THEMES[themeKey] || THEMES.indigo;
 
         ChatWidget.create({
-          // Replace with your real n8n (or other) webhook URL:
-          webhookUrl: 'https://demo.local/webhook/chat',
+          // Real n8n webhook for testing image attachments
+          webhookUrl: 'https://akabadger.app.n8n.cloud/webhook/79e9af94-202d-46ed-8c62-1ff5043b0d68/chat',
 
           title: 'Support',
           subtitle: "We're here 24/7",

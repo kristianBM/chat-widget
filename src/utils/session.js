@@ -41,8 +41,21 @@ export function loadSession() {
  */
 export function saveSession(sessionId, messages) {
   try {
-    const trimmed = messages.slice(-MAX_MESSAGES);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ sessionId, messages: trimmed }));
+    // Strip attachment payloads (base64) before persisting — they can blow past
+    // the localStorage quota fast. Keep only a lightweight placeholder so the UI
+    // can show "image was here" after reload.
+    const sanitized = messages.slice(-MAX_MESSAGES).map((m) => {
+      if (!m.attachments || m.attachments.length === 0) return m;
+      return {
+        ...m,
+        attachments: m.attachments.map((a) => ({
+          type: a.type,
+          name: a.name,
+          placeholder: true,
+        })),
+      };
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ sessionId, messages: sanitized }));
   } catch {
     // localStorage might be unavailable (private browsing, quota exceeded, etc.)
   }
