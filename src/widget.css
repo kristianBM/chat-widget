@@ -112,6 +112,9 @@
   width: var(--cw-bubble-size);
   height: var(--cw-bubble-size);
   border-radius: 50%;
+  /* Never clip the unread badge, which is anchored outside the circle.
+     Guards against host-page resets like `button { overflow: hidden }`. */
+  overflow: visible;
   background: var(--cw-primary);
   color: var(--cw-primary-text);
   border: none;
@@ -155,6 +158,7 @@
   position: absolute;
   top: -2px;
   right: -2px;
+  z-index: 2; /* stay above the bubble icon/background regardless of host CSS */
   min-width: 20px;
   height: 20px;
   background: var(--cw-badge-bg);
