@@ -115,6 +115,10 @@
   /* Never clip the unread badge, which is anchored outside the circle.
      Guards against host-page resets like `button { overflow: hidden }`. */
   overflow: visible;
+  /* Own stacking context so the badge (a child) always composites above the
+     bubble's background — even after the open/close transform animations
+     promote GPU layers, which otherwise pushed the badge behind. */
+  isolation: isolate;
   background: var(--cw-primary);
   color: var(--cw-primary-text);
   border: none;
